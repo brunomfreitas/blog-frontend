@@ -1,8 +1,8 @@
 // src/pages/Public/PostDetailPage.jsx
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import BlogLayout from '../../components/layout/BlogLayout';
-import { getPostById } from '../../services/postsService';
+import BlogLayout from '../../layout/BlogLayout';
+import { getPublicPosts } from '../../services/postsService';
 
 export default function PostDetailPage() {
   const { id } = useParams();
@@ -11,7 +11,7 @@ export default function PostDetailPage() {
   useEffect(() => {
     async function loadPost() {
       try {
-        const data = await getPostById(id);
+        const data = await getPublicPosts();
         setPost(data);
       } catch (err) {
         console.error('Erro ao carregar post', err);
