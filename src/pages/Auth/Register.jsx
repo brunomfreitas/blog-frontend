@@ -13,8 +13,9 @@ import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import AppTheme from '../shared-theme/AppTheme';
-import ColorModeSelect from '../shared-theme/ColorModeSelect';
+import Sitemark from '../../layout/SitemarkIcon';
+import AppTheme from '../../theme/AppTheme';
+import ColorModeSelect from '../../theme/ColorModeSelect';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -58,7 +59,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
-import Sitemark from '../../layout/SitemarkIcon';
+
 
 export default function SignUp(props) {  
   const [passwordError, setPasswordError] = React.useState(false);
@@ -187,7 +188,7 @@ export default function SignUp(props) {
           </Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Typography sx={{ textAlign: 'center' }}>
-              Já tem uma conta ?{' '}
+              Já tem uma conta ? {' '}
               <Link
                 href="/material-ui/getting-started/templates/sign-in/"
                 variant="body2"

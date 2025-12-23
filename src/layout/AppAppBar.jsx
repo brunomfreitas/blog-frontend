@@ -70,14 +70,12 @@ export default function AppAppBar() {
             {/* Left: Logo + Desktop menu */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Sitemark />
-
               {/* Desktop menu */}
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                 <Stack direction="row" spacing={1} alignItems="center">
                   <Button variant="text" color="info" size="small" onClick={() => go('/')}>
-                    Blog
+                    Início
                   </Button>
-
                   {user ? (
                     <>
                       <Button size="small" onClick={() => go('/admin/posts')}>
@@ -94,21 +92,20 @@ export default function AppAppBar() {
 
             {/* Right: Desktop actions */}
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1, alignItems: 'center' }}>
-              {!user ? (
+              {!user ? (<>
                 <Button variant="contained" size="small" onClick={() => go('/login')}>
                   Login
-                </Button>
+                </Button>				
+				</>
               ) : (
                 <Button color="error" variant="text" size="small" onClick={handleLogout}>
                   Logout
                 </Button>
-              )}
-              
+              )}              
             </Box>
 
             {/* Mobile actions: theme + hamburger */}
-            <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1, alignItems: 'center' }}>
-              
+            <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1, alignItems: 'center' }}>              
               <IconButton onClick={toggleMobile} aria-label="Abrir menu">
                 <MenuIcon />
               </IconButton>

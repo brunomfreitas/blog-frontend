@@ -20,14 +20,21 @@ import { getCategories } from '../../services/categoryService';
 import { createPost, getPostById, updatePost } from '../../services/postsService';
 import { getPostStatus } from '../../services/postStatusService';
 
-const schema = Yup.object({
-  title: Yup.string().required('Informe o título.'),
-  subtitle: Yup.string().nullable(),
-  message: Yup.string().required('Informe a mensagem.'),
-  image: Yup.string().url('Informe uma URL válida.').nullable(),
-  category: Yup.number().required('Selecione a categoria.'),
-  status: Yup.number().required('Selecione o status.'),
-});
+function toDatetimeLocal(value) {
+  if (!value) return '';
+  const d = new Date(value);
+
+  const pad = (n) => String(n).padStart(2, '0');
+
+  const yyyy = d.getFullYear();
+  const mm = pad(d.getMonth() + 1);
+  const dd = pad(d.getDate());
+  const hh = pad(d.getHours());
+  const min = pad(d.getMinutes());
+
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+}
+
 
 export default function AdminPostForm() {
   const navigate = useNavigate();
@@ -38,10 +45,26 @@ export default function AdminPostForm() {
   const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ ajuste aqui conforme o shape do seu /me
-  const createdById = user?.personId ?? user?.person?.id ?? user?.id ?? null;
-  const postedById = user?.personId ?? user?.person?.id ?? user?.id ?? null;	
+	// ✅ ajuste aqui conforme o shape do seu /me
+	const createdById = user?.personId ?? user?.person?.id ?? user?.id ?? null;
+	const postedById = user?.personId ?? user?.person?.id ?? user?.id ?? null;	
   
+	const schema = Yup.object({
+		title: Yup.string().required('Informe o título.'),
+		subtitle: Yup.string().required('Informe o subtítulo.'),
+		message: Yup.string().required('Informe a mensagem.'),
+		image: Yup.string().url('Informe uma URL válida.').nullable(),
+		category: Yup.number().required('Selecione a categoria.'),
+		status: Yup.number().required('Selecione o status.'),
+		postedAt: Yup.date()
+			.nullable()
+			.when('status', {
+				is: (s) => Number(s) === 7,
+				then: (schema) => schema.required('Informe a data da postagem.'),
+				otherwise: (schema) => schema.notRequired(),
+			}),
+	});
+
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -96,7 +119,7 @@ export default function AdminPostForm() {
   const selectedCategory = useMemo(() => categories.find((c) => c.id === Number(values.category)) ?? null, [categories, values.category]);
 
   const selectedStatus = useMemo(() => statuses.find((s) => s.id === Number(values.status)) ?? null, [statuses, values.status]);
-
+  
   useEffect(() => {
     (async () => {
       try {
@@ -122,6 +145,8 @@ export default function AdminPostForm() {
 			...(isEdit && post.status === 7 && { postedBy: post.postedBy ?? postedById,
 				postedAt: post.postedAt ?? ''
 			 }),
+			postedAt: toDatetimeLocal(post.postedAt), // ✅ aqui
+
           });
         }
       } finally {
@@ -265,7 +290,6 @@ export default function AdminPostForm() {
 						required
 						variant="standard"
 						type="datetime-local"
-
 					/>
 				</Grid>
 }

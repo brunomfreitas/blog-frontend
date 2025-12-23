@@ -2,7 +2,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 
 export default function SitemarkIcon() {
   return (
-    <SvgIcon sx={{ height: 24, width: 120, mr: 2 }}>
+    <SvgIcon sx={{ height: 30, width: 120, mr: 0 }}>
       <svg viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         {/* Graduation cap */}
         <path
@@ -15,19 +15,7 @@ export default function SitemarkIcon() {
           opacity="0.25"
         />
         <line x1="36" y1="9" x2="36" y2="15" stroke="#00D3AB" strokeWidth="2" />
-
-        {/* Text */}
-        <text
-          x="50"
-          y="16"
-          fill="#4876EE"
-          fontSize="12"
-          fontFamily="Arial, Helvetica, sans-serif"
-          fontWeight="700"
-        >
-          Blog
-        </text>
-      </svg>
+     </svg>
     </SvgIcon>
   );
 }

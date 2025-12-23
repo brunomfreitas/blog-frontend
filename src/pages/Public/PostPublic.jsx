@@ -229,8 +229,7 @@ export default function PostPubic() {
     const tag = p?.postCategory?.name ?? "Geral";
 
 	// comentado para gerar imagens aleatórias
-    const img = // p?.image
-    	"https://picsum.photos/800/450?random=" + (p?.id ?? Math.floor(Math.random() * 1000));
+    const img = p?.image ??	"https://picsum.photos/800/450?random=" + (p?.id ?? Math.floor(Math.random() * 1000));
 
     const authors = [
       {
@@ -249,14 +248,17 @@ export default function PostPubic() {
 
   return (
 	<Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <div>
-        <Typography variant="h1" gutterBottom>
-          Blog
-        </Typography>
-        
-      </div>	  
-	 
-
+      <div>        
+			<Typography variant="h3" gutterBottom>
+				Bem-vindo(a) ao Blog Educacional
+			</Typography>
+			<Typography variant="body1" gutterBottom>
+				Aqui você encontrará conteúdos preparados pelos professores para apoiar seus estudos, revisar conceitos importantes e aprofundar seu aprendizado.
+			</Typography>
+			<Typography variant="body1" gutterBottom >
+				Utilize as categorias para explorar os temas ou pesquise diretamente por um assunto de seu interesse.
+			</Typography>		
+      </div>
 		<Box
 			sx={{
 				display: 'flex',
@@ -288,10 +290,6 @@ export default function PostPubic() {
 				<Categories value={selectedCategoryId} onChange={handleCategoryChange} />
 			</Box>
 		</Box>
-
-
-
-
 		<Grid container spacing={2} columns={12}>
 			{posts.map((p, index) => {
 				const card = normalizePost(p);

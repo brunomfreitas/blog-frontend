@@ -1,12 +1,64 @@
-import { Box, Typography } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import AvatarGroup from '@mui/material/AvatarGroup';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import React from 'react';
+import Typography from '@mui/material/Typography';
+import { format } from 'date-fns';
+import * as React from 'react';
+
+function Author({ author, date }) {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 2,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '16px',
+      }}
+    >
+      <Box
+        sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}
+      >
+        <AvatarGroup max={3}>          
+            <Avatar              
+              alt={author}
+              sx={{ width: 24, height: 24 }}
+            />          
+        </AvatarGroup>
+        <Typography variant="caption">
+          {author}
+        </Typography>
+      </Box>
+      <Typography variant="caption">{format(new Date(date), 'dd/MM/yyyy HH:mm')}</Typography>
+    </Box>
+  );
+}
+
 import { useParams } from 'react-router-dom';
 import { getPostById } from '../../services/postsService';
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  backgroundColor: (theme.vars || theme).palette.background.paper,
+  borderRadius: theme.spacing(1.5),
+}));
+
+const ContentWrapper = styled(CardContent)(({ theme }) => ({
+  padding: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2.5),
+  },
+}));
+
 
 export default function PostPublicView() {
   const { id } = useParams();
@@ -22,11 +74,9 @@ export default function PostPublicView() {
       try {
         setLoading(true);
         setError('');
-
         const resp = await getPostById(id);
         setPost(resp);
       } catch (e) {
-        console.error('❌ Erro ao carregar post:', e);
         setError('Não foi possível carregar o post.');
       } finally {
         setLoading(false);
@@ -37,130 +87,97 @@ export default function PostPublicView() {
   if (loading) return <Box sx={{ p: 2 }}>Carregando...</Box>;
   if (error) return <Box sx={{ p: 2, color: 'error.main' }}>{error}</Box>;
   if (!post) return <Box sx={{ p: 2 }}>Post não encontrado.</Box>;
-
-const StyledCard = styled(Card)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  padding: 0,
-  height: '100%',
-  backgroundColor: (theme.vars || theme).palette.background.paper,
-  '&:hover': {
-    backgroundColor: 'transparent',
-    cursor: 'pointer',
-  },
-  '&:focus-visible': {
-    outline: '3px solid',
-    outlineColor: 'hsla(210, 98%, 48%, 0.5)',
-    outlineOffset: '2px',
-  },
-}));
-
-const StyledCardContent = styled(CardContent)({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 4,
-  padding: 16,
-  flexGrow: 1,
-  '&:last-child': {
-    paddingBottom: 16,
-  },
-});
-
-const StyledTypography = styled(Typography)({
-  display: '-webkit-box',
-  WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: 2,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-});
-
-  const normalizePost = (p) => {
-	
-	console.log('p', p);
-
-    // comentado para gerar imagens aleatórias
-    const img = // p?.image
-    	"https://picsum.photos/800/450?random=" + (p?.id ?? Math.floor(Math.random() * 1000));
-
-	const tag = p?.postCategory?.name ?? "Geral";
-	const title = p?.title ?? p?.nm_title ?? p?.titulo ?? "Sem título";
-    const description = p?.subtitle;
-	const message = p?.message;
-	
-    const authors = [
-      {
-        name: p?.postedByPerson?.name ?? "Autor Desconhecido",
-        avatar: p?.author?.avatar ?? "",
-      },
-    ];
-
-    const date = p?.postedAt ?? null;
-	
-    return { img, tag, title, description, message, authors, date };
-  };
-
+  
+  const image = post.image ?? 'https://picsum.photos/1200/600?random=' + (post?.id ?? Math.floor(Math.random() * 1000));
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-    	  
-	  <Box
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column-reverse', md: 'row' },
-          width: '100%',
-          justifyContent: 'space-between',
-          alignItems: { xs: 'start', md: 'center' },
-          gap: 4,
-          overflow: 'auto',
-        }}
-      > 
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+		flexDirection: 'column',
+        px: 2,
+        py: 4,
+      }}
+    >
+		<Box sx={{ mb: 2 }}>
+			<Typography variant="h6" gutterBottom>
+				Boa leitura ! Este conteúdo foi preparado por professores para apoiar seus estudos.
+			</Typography>
+			<Typography variant="subtitle1" gutterBottom >
+				Para voltar ao início, clique em “Início” no menu superior.
+			</Typography>		
       </Box>
-		<Grid container spacing={2} columns={12}>
-		{[post].map((p, index) => {
-			const card = normalizePost(p);
-			return (
-			<Grid key={p?.id ?? index} size={{ xs: 12 }}>
-				<StyledCard
-				variant="outlined"
-				tabIndex={0}
-				className={"Mui-focused"}
-				onClick={() => console.log("clicou no post:", p)}
-				>
-				<CardMedia
-					component="img"
-					alt={card.title}
-					image={card.img}
-					sx={{
-					aspectRatio: "16 / 9",
-					borderBottom: "1px solid",
-					borderColor: "divider",
-					}}					
-				/>
-				<StyledCardContent>
-					<Typography gutterBottom variant="caption" component="div">
-					{card.tag}
-					</Typography>
+		
+      {/* <Box sx={{ width: '100%', maxWidth: 960 }}> */}
+		
+        <StyledCard elevation={0}>
+          {/* 🔝 IMAGEM NO TOPO */}
+          <CardMedia
+            component="img"
+            image={image}
+            alt={post.title}
+            sx={{
+              height: { xs: 220, md: 360 },
+              objectFit: 'cover',
+              borderRadius: '8px',
+            }}
+          />
 
-					<Typography gutterBottom variant="h6" component="div">
-					{card.title}
-					</Typography>
+          <ContentWrapper>
+            {/* Categoria */}
+            <Typography
+              variant="overline"
+              sx={{ fontSize: 14, letterSpacing: 1 }}
+              color="text.secondary"
+            >
+              {post?.postCategory?.name ?? 'Geral'}
+            </Typography>
 
-					<StyledTypography variant="body2" color="text.secondary" gutterBottom >
-					{card.description}
-					</StyledTypography>
+            {/* Título */}
+            <Typography
+              variant="h3"
+              sx={{
+                fontWeight: 700,
+                lineHeight: 1.2,
+              }}
+			  align="justify"
+            >
+              {post.title}
+            </Typography>
 
-					<StyledTypography variant="body2" color="text.secondary" gutterBottom >
-					{card.message}
-					</StyledTypography>
+            {/* Subtítulo */}
+            {post.subtitle && (
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: '1.15rem',
+                  lineHeight: 1.6,
+                  color: 'text.secondary',
+                }}
+				align="justify"
+              >
+                {post.subtitle}
+              </Typography>
+            )}
 
+            {/* Conteúdo */}
+            <Typography
+              variant="body1"
+              sx={{
+                fontSize: '1.05rem',
+                lineHeight: 1.8,
+                mt: 2,
+                whiteSpace: 'pre-line',
+              }}
+			  align="justify"
+            >
+              {post.message}
+            </Typography>
+          </ContentWrapper>
+		  <Author author={post.postedByPerson.name} date={post.postedAt} />
 
-				</StyledCardContent>
-
-				{/* <Author authors={card.authors} date={card.date} /> */}
-				</StyledCard>
-			</Grid>
-			);
-		})}
-		</Grid>
-	</Box>
+        </StyledCard>
+      {/* </Box> */}
+    </Box>
   );
 }

@@ -13,7 +13,7 @@ export default function App() {
   return (
     <Routes>
       {/* 👇 Login FORA do layout */}
-      <Route path="/login" element={<SignIn />} />
+      <Route path="/login" element={<SignIn />} />	  
 
       {/* 👇 Tudo aqui dentro usa AppAppBar + Container + Footer */}
       <Route element={<BlogLayout />}>
