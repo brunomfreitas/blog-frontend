@@ -160,7 +160,7 @@ export default function AdminPostForm() {
       </Box>
     );
   }
-
+    
   return (
     <FormikProvider value={formik}>
       <Form noValidate>
@@ -278,7 +278,8 @@ export default function AdminPostForm() {
 					<TextField
 						name="postedAt"
 						label="Postado Em"
-						value={values.postedAt}
+						// value={values.postedAt}
+					  	value={toDatetimeLocal(values.postedAt)}
 						onChange={handleChange}
 						onBlur={handleBlur}
 						error={touched.postedAt && Boolean(errors.postedAt)}
