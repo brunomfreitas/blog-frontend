@@ -93,7 +93,7 @@ export default function AdminPostForm() {
 			status: Number(values.status),
 			...(isEdit && Number(values.status) === 7 && {
 				postedBy: Number(values.postedBy ?? postedById),
-				postedAt: values.postedAt,
+				postedAt: new Date(values.postedAt).toISOString(),
 			}),
         };
 
