@@ -11,6 +11,7 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material';
+import { format } from 'date-fns';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -145,8 +146,7 @@ export default function AdminPostForm() {
 			...(isEdit && post.status === 7 && { postedBy: post.postedBy ?? postedById,
 				postedAt: post.postedAt ?? ''
 			 }),
-			postedAt: toDatetimeLocal(post.postedAt), // ✅ aqui
-
+			postedAt: format(new Date(post.postedAt), 'dd/MM/yyyy HH:mm'),
           });
         }
       } finally {
