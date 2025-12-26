@@ -142,10 +142,8 @@ export default function AdminPostForm() {
             createdBy: post.createdBy ?? createdById,			
             category: post.category ?? '',
             status: post.status ?? '',
-			...(isEdit && post.status === 7 && { postedBy: post.postedBy ?? postedById,
-				postedAt: post.postedAt ?? ''
-			 }),
-			postedAt: new Date(post.postedAt).toISOString(),
+			postedBy: post.postedBy ?? postedById,
+            postedAt: post.postedAt ?? toDatetimeLocal(post.postedAt),
           });
         }
       } finally {
